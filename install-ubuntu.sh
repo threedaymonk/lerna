@@ -1,6 +1,4 @@
-# Copy me to ~/.config/upstart/lerna.conf and change the path in the "exec ..."
-# line if necessary
-
+cat >~/.config/upstart/lerna.conf <<END
 description "Lerna multi-head automator"
 author "Paul Battley <pbattley@gmail.com>"
 
@@ -15,4 +13,5 @@ respawn
 console log
 
 # Start in foreground mode so it can be properly managed
-exec lerna
+exec $(pwd)/lerna
+END

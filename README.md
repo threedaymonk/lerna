@@ -36,8 +36,8 @@ You'll see output something like this:
     [2014-08-02T04:11:21.521592Z #13059] DP2 => connected
     [2014-08-02T04:11:21.521679Z #13059] Switching to DP2
 
-An Upstart job is provided: copy `lerna.conf` to `~/.config/upstart/lerna.conf`
--- you'll need to edit the `exec` line if `lerna` is not in your path.
+A script is provided to create an Upstart job on Ubuntu; run
+`install-ubuntu.sh` as the desktop user (i.e. NOT as root).
 
 You can then use
 
