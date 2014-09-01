@@ -1,4 +1,6 @@
-cat >~/.config/upstart/lerna.conf <<END
+UPSTART_DIR=~/.config/upstart
+mkdir -p $UPSTART_DIR
+cat >$UPSTART_DIR/lerna.conf <<END
 description "Lerna multi-head automator"
 author "Paul Battley <pbattley@gmail.com>"
 
