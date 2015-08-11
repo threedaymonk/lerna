@@ -12,6 +12,7 @@ RSpec.describe Lerna::Display do
 
     it { is_expected.to be_connected }
     it { is_expected.to be_internal }
+    it { is_expected.to be_digital }
 
     it 'has a name' do
       expect(subject.name).to eq('LVDS1')
@@ -29,6 +30,7 @@ RSpec.describe Lerna::Display do
 
     it { is_expected.to be_connected }
     it { is_expected.not_to be_internal }
+    it { is_expected.to be_digital }
 
     it 'has a name' do
       expect(subject.name).to eq('HDMI1')
@@ -46,6 +48,7 @@ RSpec.describe Lerna::Display do
 
     it { is_expected.not_to be_connected }
     it { is_expected.not_to be_internal }
+    it { is_expected.to be_digital }
 
     it 'has a name' do
       expect(subject.name).to eq('DP1')
@@ -54,6 +57,14 @@ RSpec.describe Lerna::Display do
     it 'has a type' do
       expect(subject.type).to eq('DP')
     end
+  end
+
+  context 'a disconnected VGA display' do
+    let(:xrandr_line) {
+      'VGA1 disconnected (normal left inverted right x axis y axis)'
+    }
+
+    it { is_expected.not_to be_digital }
   end
 
   context 'a display with a hyphen in the type' do

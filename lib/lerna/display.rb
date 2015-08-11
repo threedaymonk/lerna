@@ -1,6 +1,7 @@
 module Lerna
   class Display
     INTERNAL_TYPES = %w[ LVDS ]
+    DIGITAL_TYPES = %w[ LVDS DP HDMI DVI ]
 
     def self.parse(line)
       name, status, = line.split(/\s/)
@@ -24,6 +25,18 @@ module Lerna
 
     def internal?
       INTERNAL_TYPES.include?(type)
+    end
+
+    def external?
+      !internal?
+    end
+
+    def digital?
+      DIGITAL_TYPES.include?(type)
+    end
+
+    def analog?
+      !digital?
     end
 
     def ==(other)
