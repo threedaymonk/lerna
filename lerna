@@ -1,65 +1,42 @@
 #!/usr/bin/env ruby
 
+require 'lerna/strategy_selector'
+require 'lerna/state'
+
 def log(str)
   time = Time.now.utc
   timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06dZ" % time.usec
   puts "[%s #%d] %s" % [timestamp, Process.pid, str]
 end
 
-def enumerate_displays
-  Hash[`xrandr`.scan(/^([A-Z]+\d+) (dis)?connected/).map { |parts|
-    [parts[0], parts[1] != "dis"]
-  }.sort]
-end
-
-def print_state_changes(previous, current)
-  current.each do |name, connected|
-    was_connected = previous[name]
-    if was_connected != connected
-      log "#{name} => #{connected ? "connected" : "disconnected"}"
-    end
-  end
-end
-
-def internal?(name)
-  name =~ /^LVDS/
-end
-
-def preference(name, connected)
-  # prefer connected displays, and external over internal
-  [connected ? 0 : 1, internal?(name) ? 1 : 0]
-end
-
-def update_connections(displays)
-  by_preference = displays.sort_by { |n, c| preference(n, c) }.map { |n, c| n }
-  to_connect = by_preference.take(1)
-  to_disconnect = by_preference[1 .. -1]
-
-  log "Switching to #{to_connect.join}"
-
-  commands = [
-    to_disconnect.map { |n| "--output #{n} --off" },
-    to_connect.map { |n| "--output #{n} --auto" }
-  ].compact.join(" ")
-
-  system "xrandr #{commands}"
-  system "xset dpms force on"
-end
+strategies = %w[
+  external-digital-only
+  internal-only
+]
 
 trap("TERM") {
   log "Exiting"
   exit
 }
 
-previous = enumerate_displays
-update_connections previous
-loop do
-  current = enumerate_displays
+state = Lerna::State.new
+strategy_selector = Lerna::StrategySelector.new
 
-  if previous != current
-    print_state_changes previous, current
-    update_connections current
-    previous = current
+loop do
+  state.scan!
+
+  if state.changed?
+    log state.displays.
+      map { |d| "#{d.name}#{d.connected? ? '*' : ''}" }.
+      join(' ')
+    strategy = strategy_selector.call(strategies, state.displays)
+    if strategy
+      log "Using #{strategy.class}"
+      system 'xrandr' *strategy.configuration
+      system "xset dpms force on"
+    else
+      log 'No applicable strategy found'
+    end
   end
 
   sleep 2
