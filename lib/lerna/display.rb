@@ -4,18 +4,18 @@ module Lerna
 
     def self.parse(line)
       name, status, = line.split(/\s/)
-      new(name, status)
+      new(name, status == 'connected')
     end
 
-    def initialize(name, status)
+    def initialize(name, connected)
       @name = name
-      @status = status
+      @connected = connected
     end
 
     attr_reader :name
 
     def connected?
-      @status == 'connected'
+      @connected
     end
 
     def type
