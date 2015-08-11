@@ -2,7 +2,7 @@ require 'lerna/display_enumerator'
 
 RSpec.describe Lerna::DisplayEnumerator do
   subject {
-    described_class.new.current(xrandr_output)
+    described_class.new.call(xrandr_output)
   }
 
   context 'laptop with one external HDMI connected' do
