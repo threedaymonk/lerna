@@ -25,5 +25,9 @@ module Lerna
     def internal?
       INTERNAL_TYPES.include?(type)
     end
+
+    def ==(other)
+      [name, connected?] == [other.name, other.connected?]
+    end
   end
 end

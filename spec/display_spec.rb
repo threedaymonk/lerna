@@ -83,4 +83,24 @@ RSpec.describe Lerna::Display do
       expect(subject.type).to eq('DVI')
     end
   end
+
+  context 'equality' do
+    it 'is true if displays have the same name and connectivity' do
+      a = described_class.new('HDMI1', true)
+      b = described_class.new('HDMI1', true)
+      expect(a).to eq(b)
+    end
+
+    it 'is false if displays have a different name' do
+      a = described_class.new('HDMI1', true)
+      b = described_class.new('VGA1', true)
+      expect(a).not_to eq(b)
+    end
+
+    it 'is false if displays have different connectivity' do
+      a = described_class.new('HDMI1', true)
+      b = described_class.new('HDMI1', false)
+      expect(a).not_to eq(b)
+    end
+  end
 end
