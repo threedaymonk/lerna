@@ -18,6 +18,8 @@ Style/AlignParameters:
 # Use Weirich style
 Style/BlockDelimiters:
   EnforcedStyle: semantic
+  Exclude:
+    - 'bin/lerna'
 
 Style/CollectionMethods:
   PreferredMethods:

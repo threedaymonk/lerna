@@ -5,8 +5,8 @@ require 'lerna/state'
 
 def log(str)
   time = Time.now.utc
-  timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06dZ" % time.usec
-  puts "[%s #%d] %s" % [timestamp, Process.pid, str]
+  timestamp = time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06dZ' % time.usec
+  puts '[%s #%d] %s' % [timestamp, Process.pid, str]
 end
 
 strategies = %w[
@@ -14,8 +14,8 @@ strategies = %w[
   internal-only
 ]
 
-trap("TERM") {
-  log "Exiting"
+trap('TERM') {
+  log 'Exiting'
   exit
 }
 
@@ -32,8 +32,8 @@ loop do
     strategy = strategy_selector.call(strategies, state.displays)
     if strategy
       log "Using #{strategy.class}"
-      system 'xrandr' *strategy.configuration
-      system "xset dpms force on"
+      system 'xrandr', *strategy.configuration
+      system 'xset dpms force on'
     else
       log 'No applicable strategy found'
     end
