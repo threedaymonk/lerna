@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby
 
-require 'lerna/strategy_selector'
-require 'lerna/state'
+require 'lerna/runner'
 
-def log(str)
+LOGGER = lambda { |str|
   time = Time.now.utc
   timestamp = time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06dZ' % time.usec
   puts '[%s #%d] %s' % [timestamp, Process.pid, str]
-end
+}
 
 strategies = %w[
   external-digital-only
@@ -19,25 +18,17 @@ trap('TERM') {
   exit
 }
 
-state = Lerna::State.new
-strategy_selector = Lerna::StrategySelector.new
+# def system(*args)
+#   LOGGER.call(args.join(' '))
+# end
+
+runner = Lerna::Runner.new(
+  logger: LOGGER,
+  strategies: strategies,
+  system: method(:system)
+)
 
 loop do
-  state.scan!
-
-  if state.changed?
-    log state.displays.
-      map { |d| "#{d.name}#{d.connected? ? '*' : ''}" }.
-      join(' ')
-    strategy = strategy_selector.call(strategies, state.displays)
-    if strategy
-      log "Using #{strategy.class}"
-      system 'xrandr', *strategy.configuration
-      system 'xset dpms force on'
-    else
-      log 'No applicable strategy found'
-    end
-  end
-
+  runner.run
   sleep 2
 end
