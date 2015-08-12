@@ -36,8 +36,16 @@ You'll see output something like this:
     [2014-08-02T04:11:21.521592Z #13059] DP2 => connected
     [2014-08-02T04:11:21.521679Z #13059] Switching to DP2
 
-A script is provided to create an Upstart job on Ubuntu; run
-`install-ubuntu.sh` as the desktop user (i.e. NOT as root).
+To see more options, use:
+
+```sh
+$ lerna --help
+```
+
+An example Upstart script for Ubuntu (pre-15.04) is provided in the `support`
+directory.
+This assumes that `lerna` is in the path; if it's not, you'll need to adjust
+this.
 
 You can then use
 
@@ -47,3 +55,9 @@ $ start lerna
 
 to start the job immediately; it should start and stop automatically with your
 desktop session thereafter.
+
+## Wanted
+
+* Example job for systemd
+* More strategies
+* Ability to read from a configuration file (and reload on change)

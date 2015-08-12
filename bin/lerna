@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'lerna/runner'
+require 'lerna/strategy'
 
 LOGGER = lambda { |str|
   time = Time.now.utc
@@ -20,7 +21,9 @@ parser = OptionParser.new { |opts|
   opts.banner = "Usage: #{executable} [options]"
   opts.on(
     '-s', '--strategies', String,
-    "Strategies in order of precedence (default #{options[:strategies].join(',')})"
+    'Strategies in order of precedence, separated by commas',
+    "Default is #{options[:strategies].join(',')}",
+    "Available: #{Lerna::Strategy.registry.keys.join(' ')}"
   ) do |str|
     options[:strategies] = str.split(/,/)
   end
