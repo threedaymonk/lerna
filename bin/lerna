@@ -10,7 +10,7 @@ LOGGER = lambda { |str|
 }
 
 options = {
-  strategies: %w[ external-digital-only internal-only ],
+  strategies: %w[ dual-external external-digital-only internal-only ],
   system: method(:system)
 }
 
