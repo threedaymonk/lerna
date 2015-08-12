@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'lerna/runner'
 
 LOGGER = lambda { |str|
@@ -8,25 +9,47 @@ LOGGER = lambda { |str|
   puts '[%s #%d] %s' % [timestamp, Process.pid, str]
 }
 
-strategies = %w[
-  external-digital-only
-  internal-only
-]
-
-trap('TERM') {
-  log 'Exiting'
-  exit
+options = {
+  strategies: %w[ external-digital-only internal-only ],
+  system: method(:system)
 }
 
-# def system(*args)
-#   LOGGER.call(args.join(' '))
-# end
+executable = File.basename(__FILE__)
+
+parser = OptionParser.new { |opts|
+  opts.banner = "Usage: #{executable} [options]"
+  opts.on(
+    '-s', '--strategies', String,
+    "Strategies in order of precedence (default #{options[:strategies].join(',')})"
+  ) do |str|
+    options[:strategies] = str.split(/,/)
+  end
+  opts.on(
+    '-d', '--dry-run',
+    'Just log the actions that would be taken'
+  ) do
+    options[:system] = ->(*args) { LOGGER.call(args.join(' ')) }
+  end
+  opts.on(
+    "-h", "--help",
+    "Display this help message and exit"
+  ) do
+    puts opts
+    exit
+  end
+}
+parser.parse!
 
 runner = Lerna::Runner.new(
   logger: LOGGER,
-  strategies: strategies,
-  system: method(:system)
+  strategies: options[:strategies],
+  system: options[:system]
 )
+
+trap('TERM') {
+  LOGGER.call('Exiting')
+  exit
+}
 
 loop do
   runner.run
