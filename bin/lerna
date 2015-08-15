@@ -34,8 +34,8 @@ parser = OptionParser.new { |opts|
     options[:system] = ->(*args) { LOGGER.call(args.join(' ')) }
   end
   opts.on(
-    "-h", "--help",
-    "Display this help message and exit"
+    '-h', '--help',
+    'Display this help message and exit'
   ) do
     puts opts
     exit
