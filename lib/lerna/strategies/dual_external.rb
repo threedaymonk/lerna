@@ -8,15 +8,7 @@ module Lerna
       end
 
       def configuration
-        [].tap { |conf|
-          disconnected = displays - wanted_displays
-          disconnected.each do |d|
-            conf << '--output' << d.name << '--off'
-          end
-          conf << '--output' << wanted_displays[0].name << '--auto'
-          conf << '--output' << wanted_displays[1].name << '--auto' <<
-            '--right-of' << wanted_displays[0].name
-        }
+        disconnected_configuration + connected_configuration
       end
 
     private
@@ -26,6 +18,21 @@ module Lerna
           select(&:connected?).
           select { |d| d.external? && d.digital? }.
           sort_by(&:name)
+      end
+
+      def disconnected_configuration
+        disconnected = displays - wanted_displays
+        disconnected.flat_map { |d|
+          ['--output', d.name, '--off']
+        }
+      end
+
+      def connected_configuration
+        names = wanted_displays.map(&:name)
+        [
+          '--output', names[0], '--auto',
+          '--output', names[1], '--auto', '--right-of', names[0]
+        ]
       end
     end
   end
