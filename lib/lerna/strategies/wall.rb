@@ -2,9 +2,9 @@ require 'lerna/strategy'
 
 module Lerna
   module Strategies
-    class DualExternal < Strategy
+    class Wall < Strategy
       def applicable?
-        wanted_displays.length == 2
+        wanted_displays.length >= 2
       end
 
       def configuration
@@ -29,10 +29,14 @@ module Lerna
 
       def connected_configuration
         names = wanted_displays.map(&:name)
-        [
-          '--output', names[0], '--auto',
-          '--output', names[1], '--auto', '--right-of', names[0]
-        ]
+        leftmost = configure_one(names.first)
+        names.each_cons(2).inject(leftmost) { |a, (l, r)|
+          a + configure_one(r) + ['--right-of', l]
+        }
+      end
+
+      def configure_one(name)
+        ['--output', name, '--auto']
       end
     end
   end

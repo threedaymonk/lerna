@@ -1,6 +1,6 @@
-require 'lerna/strategies/dual_external'
+require 'lerna/strategies/portrait_wall'
 
-RSpec.describe Lerna::Strategies::DualExternal do
+RSpec.describe Lerna::Strategies::PortraitWall do
   subject {
     described_class.new(displays)
   }
@@ -38,12 +38,41 @@ RSpec.describe Lerna::Strategies::DualExternal do
 
     it { is_expected.to be_applicable }
 
-    it 'configures the connected external display' do
+    it 'configures the connected external displays in alphanumeric order' do
       expect(subject.configuration).to eq(%w[
         --output LVDS1 --off
         --output VGA1  --off
-        --output DP1   --auto
-        --output DP2   --auto --right-of DP1
+        --output DP1   --auto --rotate left
+        --output DP2   --auto --rotate left --right-of DP1
+      ])
+    end
+  end
+
+  context 'when three external digital displays are connected' do
+    let(:displays) {
+      [
+        double(name: 'LVDS1', external?: false,
+               connected?: true, digital?: true),
+        double(name: 'HDMI1', external?: true,
+               connected?: true, digital?: true),
+        double(name: 'DP1', external?: true,
+               connected?: true, digital?: true),
+        double(name: 'DP2', external?: true,
+               connected?: true, digital?: true),
+        double(name: 'VGA1', external?: true,
+               connected?: false, digital?: false)
+      ]
+    }
+
+    it { is_expected.to be_applicable }
+
+    it 'configures the connected external displays in alphanumeric order' do
+      expect(subject.configuration).to eq(%w[
+        --output LVDS1 --off
+        --output VGA1  --off
+        --output DP1   --auto --rotate left
+        --output DP2   --auto --rotate left --right-of DP1
+        --output HDMI1 --auto --rotate left --right-of DP2
       ])
     end
   end
