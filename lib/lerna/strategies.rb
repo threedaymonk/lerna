@@ -1,4 +1,10 @@
-Dir[File.expand_path('../strategies/*.rb', __FILE__)].each do |path|
-  name = File.basename(path, '.rb')
-  require "lerna/strategies/#{name}"
-end
+require 'lerna/strategy'
+require 'lerna/strategies/dual_external'
+require 'lerna/strategies/external_digital_only'
+require 'lerna/strategies/internal_only'
+
+Lerna::Strategy.register(
+  'dual-external' => Lerna::Strategies::DualExternal,
+  'external-only' => Lerna::Strategies::ExternalDigitalOnly,
+  'internal-only' => Lerna::Strategies::InternalOnly
+)

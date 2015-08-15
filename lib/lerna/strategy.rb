@@ -4,10 +4,8 @@ module Lerna
       @registry ||= {}
     end
 
-    def self.inherited(subclass)
-      name = subclass.to_s.split(/::/).last
-      hyphenated = name.scan(/[A-Z][a-z_0-9]+/).map(&:downcase).join('-')
-      registry[hyphenated] = subclass
+    def self.register(names_and_classes)
+      registry.merge!(names_and_classes)
     end
 
     def initialize(displays)
