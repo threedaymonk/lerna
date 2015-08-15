@@ -42,8 +42,8 @@ RSpec.describe Lerna::Strategies::Wall do
       expect(subject.configuration).to eq(%w[
         --output LVDS1 --off
         --output VGA1  --off
-        --output DP1   --auto
-        --output DP2   --auto --right-of DP1
+        --output DP1   --auto --rotate normal
+        --output DP2   --auto --rotate normal --right-of DP1
       ])
     end
   end
@@ -70,9 +70,9 @@ RSpec.describe Lerna::Strategies::Wall do
       expect(subject.configuration).to eq(%w[
         --output LVDS1 --off
         --output VGA1  --off
-        --output DP1   --auto
-        --output DP2   --auto --right-of DP1
-        --output HDMI1 --auto --right-of DP2
+        --output DP1   --auto --rotate normal
+        --output DP2   --auto --rotate normal --right-of DP1
+        --output HDMI1 --auto --rotate normal --right-of DP2
       ])
     end
   end

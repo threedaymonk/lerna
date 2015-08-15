@@ -36,7 +36,7 @@ module Lerna
       end
 
       def configure_one(name)
-        ['--output', name, '--auto']
+        ['--output', name, '--auto', '--rotate', 'normal']
       end
     end
   end
