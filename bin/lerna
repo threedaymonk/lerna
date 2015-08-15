@@ -20,7 +20,7 @@ executable = File.basename(__FILE__)
 parser = OptionParser.new { |opts|
   opts.banner = "Usage: #{executable} [options]"
   opts.on(
-    '-s', '--strategies', String,
+    '-s', '--strategies STRATEGIES', String,
     'Strategies in order of precedence, separated by commas',
     "Default is #{options[:strategies].join(',')}",
     "Available: #{Lerna::Strategy.registry.keys.join(' ')}"
