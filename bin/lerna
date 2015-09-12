@@ -1,14 +1,12 @@
 #!/usr/bin/env ruby
 
+require 'logger'
 require 'optparse'
 require 'lerna/runner'
 require 'lerna/strategy'
 
-LOGGER = lambda { |str|
-  time = Time.now.utc
-  timestamp = time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06dZ' % time.usec
-  puts '[%s #%d] %s' % [timestamp, Process.pid, str]
-}
+logger = Logger.new(STDOUT)
+logger.level = Logger::INFO
 
 options = {
   strategies: %w[ wall external-only internal-only ],
@@ -44,13 +42,13 @@ parser = OptionParser.new { |opts|
 parser.parse!
 
 runner = Lerna::Runner.new(
-  logger: LOGGER,
+  logger: logger,
   strategies: options[:strategies],
   system: options[:system]
 )
 
 trap('TERM') {
-  LOGGER.call('Exiting')
+  logger.info('Exiting')
   exit
 }
 

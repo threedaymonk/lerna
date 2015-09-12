@@ -10,7 +10,7 @@ RSpec.describe Lerna::Runner do
       strategy_selector: strategy_selector
     )
   }
-  let(:logger) { double('logger', call: nil) }
+  let(:logger) { double('logger', debug: nil, info: nil, warn: nil) }
   let(:system) { double('system', call: nil) }
   let(:strategies) { double('strategies') }
   let(:strategy_selector) { double('strategy_selector', call: nil) }

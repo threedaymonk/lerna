@@ -16,23 +16,19 @@ module Lerna
       state.scan!
       return unless state.changed?
 
-      log state_summary
+      logger.debug state_summary
       strategy = find_strategy
       if strategy
-        log "Using #{strategy.class}"
+        logger.info "Using #{strategy.class}"
         apply_strategy strategy
       else
-        log 'No applicable strategy found'
+        logger.warn 'No applicable strategy found'
       end
     end
 
   private
 
-    attr_reader :state, :strategy_selector, :strategies
-
-    def log(s)
-      @logger.call(s)
-    end
+    attr_reader :state, :strategy_selector, :strategies, :logger
 
     def state_summary
       state.displays.
