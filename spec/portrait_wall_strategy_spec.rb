@@ -39,11 +39,16 @@ RSpec.describe Lerna::Strategies::PortraitWall do
     it { is_expected.to be_applicable }
 
     it 'configures the connected external displays in alphanumeric order' do
-      expect(subject.configuration).to eq(%w[
+      expect(subject.configure).to eq(%w[
+        --output DP1 --auto --rotate left
+        --output DP2 --auto --rotate left --right-of DP1
+      ])
+    end
+
+    it 'disables all other displays' do
+      expect(subject.preconfigure).to eq(%w[
         --output LVDS1 --off
         --output VGA1  --off
-        --output DP1   --auto --rotate left
-        --output DP2   --auto --rotate left --right-of DP1
       ])
     end
   end
@@ -67,12 +72,17 @@ RSpec.describe Lerna::Strategies::PortraitWall do
     it { is_expected.to be_applicable }
 
     it 'configures the connected external displays in alphanumeric order' do
-      expect(subject.configuration).to eq(%w[
-        --output LVDS1 --off
-        --output VGA1  --off
+      expect(subject.configure).to eq(%w[
         --output DP1   --auto --rotate left
         --output DP2   --auto --rotate left --right-of DP1
         --output HDMI1 --auto --rotate left --right-of DP2
+      ])
+    end
+
+    it 'disables all other displays' do
+      expect(subject.preconfigure).to eq(%w[
+        --output LVDS1 --off
+        --output VGA1  --off
       ])
     end
   end

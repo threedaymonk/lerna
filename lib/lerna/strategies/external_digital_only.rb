@@ -7,14 +7,13 @@ module Lerna
         winner
       end
 
-      def configuration
-        [].tap { |conf|
-          disconnected = displays - [winner]
-          disconnected.each do |d|
-            conf << '--output' << d.name << '--off'
-          end
-          conf << '--output' << winner.name << '--auto'
-        }
+      def preconfigure
+        disconnected = displays - [winner]
+        disconnected.flat_map { |d| ['--output', d.name, '--off'] }
+      end
+
+      def configure
+        ['--output', winner.name, '--auto']
       end
 
     private

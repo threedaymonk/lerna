@@ -16,9 +16,14 @@ RSpec.describe Lerna::Strategies::InternalOnly do
     it { is_expected.to be_applicable }
 
     it 'configures the internal display' do
-      expect(subject.configuration).to eq(%w[
-        --output DP1 --off
+      expect(subject.configure).to eq(%w[
         --output LVDS1 --auto
+      ])
+    end
+
+    it 'disables all other displays' do
+      expect(subject.preconfigure).to eq(%w[
+        --output DP1 --off
       ])
     end
   end

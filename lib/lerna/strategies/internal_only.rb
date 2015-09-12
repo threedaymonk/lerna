@@ -7,14 +7,15 @@ module Lerna
         displays.select(&:connected?).all?(&:internal?)
       end
 
-      def configuration
-        [].tap { |conf|
-          displays.reject(&:connected?).each do |d|
-            conf << '--output' << d.name << '--off'
-          end
-          displays.select(&:connected?).each do |d|
-            conf << '--output' << d.name << '--auto'
-          end
+      def preconfigure
+        displays.reject(&:connected?).flat_map { |d|
+          ['--output', d.name, '--off']
+        }
+      end
+
+      def configure
+        displays.select(&:connected?).flat_map { |d|
+          ['--output', d.name, '--auto']
         }
       end
     end

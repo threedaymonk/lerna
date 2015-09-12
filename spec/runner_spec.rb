@@ -51,11 +51,20 @@ RSpec.describe Lerna::Runner do
 
     context 'when a strategy is found' do
       let(:strategy) {
-        double('strategy', configuration: %w[ --option --another ])
+        double(
+          'strategy',
+          configure: %w[ --option --another ],
+          preconfigure: %w[ --off1 --off2 ]
+        )
       }
       let(:strategy_selector) {
         double('strategy_selector', call: strategy)
       }
+
+      it 'calls xrandr with the strategy preconfiguration' do
+        expect(system).to receive(:call).
+          with('xrandr', '--off1', '--off2')
+      end
 
       it 'calls xrandr with the strategy configuration' do
         expect(system).to receive(:call).

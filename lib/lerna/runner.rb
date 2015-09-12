@@ -45,7 +45,8 @@ module Lerna
     end
 
     def apply_strategy(strategy)
-      system 'xrandr', *strategy.configuration
+      system 'xrandr', *strategy.preconfigure
+      system 'xrandr', *strategy.configure
       system 'xset dpms force on'
     end
 
