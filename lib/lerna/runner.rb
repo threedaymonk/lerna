@@ -47,6 +47,7 @@ module Lerna
     end
 
     def system(*args)
+      logger.debug args.join(' ')
       @system.call(*args)
     end
   end
