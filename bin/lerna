@@ -30,7 +30,7 @@ parser = OptionParser.new { |opts|
     '-d', '--dry-run',
     'Just log the actions that would be taken'
   ) do
-    options[:system] = ->(*args) { LOGGER.call(args.join(' ')) }
+    options[:system] = ->(*args) { logger.info(args.join(' ')) }
   end
   opts.on(
     '-v', '--verbose',
