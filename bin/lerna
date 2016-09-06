@@ -10,7 +10,8 @@ logger.level = Logger::INFO
 
 options = {
   strategies: %w[ wall external-only internal-only ],
-  system: method(:system)
+  system: method(:system),
+  keep: false
 }
 
 executable = File.basename(__FILE__)
@@ -38,6 +39,12 @@ parser = OptionParser.new { |opts|
     logger.level = Logger::DEBUG
   end
   opts.on(
+    '-k', '--keep',
+    'Keep running, checking every 2s. (May cause cursor freezes.)'
+  ) do
+    options[:keep] = true
+  end
+  opts.on(
     '-h', '--help',
     'Display this help message and exit'
   ) do
@@ -53,12 +60,16 @@ runner = Lerna::Runner.new(
   system: options[:system]
 )
 
-trap('TERM') {
-  logger.info('Exiting')
-  exit
-}
+if options[:keep]
+  trap('TERM') {
+    logger.info('Exiting')
+    exit
+  }
 
-loop do
+  loop do
+    runner.run
+    sleep 2
+  end
+else
   runner.run
-  sleep 2
 end
